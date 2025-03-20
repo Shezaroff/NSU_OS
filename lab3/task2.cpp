@@ -170,9 +170,16 @@ void change_permissions(const std::vector<std::string>& args) {
         return;
     }
     try {
-        fs::permissions(args[0], static_cast<fs::perms>(std::atoi(args[1].c_str())));
+        int num = std::stoi(args[1], nullptr, 8);
+        if (args[1].length() != 3) {
+            std::cerr << "Неправильно заданы права\n";
+            return;
+        }
+        fs::permissions(args[0], static_cast<fs::perms>(num));
         std::cout << "Изменены права доступа: " << args[0] << "\n";
     } catch (const fs::filesystem_error& e) {
+        std::cerr << "Ошибка " << e.what() << "\n";
+    } catch (const std::exception& e) {
         std::cerr << "Ошибка " << e.what() << "\n";
     }
 }
